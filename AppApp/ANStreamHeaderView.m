@@ -18,6 +18,7 @@
 - (void) awakeFromNib
 {
   self.backgroundColor = [UIColor clearColor];
+  self.title.font = [UIFont fontWithName:@"Ubuntu-Medium" size:17.0f];
   [super awakeFromNib];
 }
 

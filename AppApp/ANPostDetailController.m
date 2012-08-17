@@ -49,10 +49,11 @@
     // we're gonna reuse this cell like two mofo's.
     
     detailCell = [ANPostDetailCell loadFromNib];
-    detailCell.contentView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+    detailCell.contentView.backgroundColor = [UIColor grayColor];
     detailCell.selectionStyle = UITableViewCellSelectionStyleNone;
     //detailCell.postLabel.dataDetectorTypes = UIDataDetectorTypeAll;
     //detailCell.postLabel.delegate = self;
+    detailCell.postLabel.lineBreakMode = UILineBreakModeWordWrap;
     detailCell.postLabel.postData = postData;
     detailCell.nameLabel.text = [postData stringForKeyPath:@"user.name"];
     detailCell.usernameLabel.text = [NSString stringWithFormat:@"@%@", [postData stringForKeyPath:@"user.username"]];
@@ -62,13 +63,18 @@
     // now get that and set the header height..
     CGFloat defaultViewHeight = 221; // seen in the nib.
     CGFloat defaultLabelHeight = 21; // ... i'm putting these here in case we need to change it later.
-    CGFloat newLabelHeight = detailCell.postLabel.frame.size.height;
+//    CGFloat newLabelHeight = detailCell.postLabel.frame.size.height;
     
-    detailCellHeight = defaultViewHeight + (newLabelHeight - defaultLabelHeight);
+    CGSize newLabelSize = [detailCell.postLabel.text.string sizeWithFont:detailCell.postLabel.font constrainedToSize:CGSizeMake(detailCell.postLabel.frame.size.width, detailCell.postLabel.frame.size.height*50) lineBreakMode:UILineBreakModeWordWrap];
+    detailCell.postLabel.frame = CGRectMake(detailCell.postLabel.frame.origin.x, detailCell.postLabel.frame.origin.y, detailCell.postLabel.frame.size.width, newLabelSize.height);
+    
+    detailCellHeight = defaultViewHeight + (newLabelSize.height - defaultLabelHeight);
 
     [detailCell.replyButton addTarget:self action:@selector(newPostAction:) forControlEvents:UIControlEventTouchUpInside];
     [detailCell.repostButton addTarget:self action:@selector(repostAction:) forControlEvents:UIControlEventTouchUpInside];
     [detailCell.userButton addTarget:self action:@selector(userAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
 }
 
 - (void)viewDidUnload
